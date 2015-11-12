@@ -12,3 +12,11 @@ Among those, i tried my hands on the on-boarding animtions which looked the cool
 
 ## How are these animations made?
 I wrote a blog about this about the process and techniques i followed to make these animations. [Here](http://rahulrj.github.io/android/yahoo-animation/) is the post.
+
+
+# By jayden self.
+One Activity, three Fragements.  Init these Fragements use getItem.
+First Fragment:
+  1. Icon setAlpha 0 to be transparent. Then 
+getOriginalXValues ???  Record the orignal X values 用来给下次滑动的时候取值调用。
+  2. ViewPager 会初始化当前的Page和下一个Page，如果当前的Page已经初始化，就会直接初始化下一个Page.

@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "jayden";
     private static final int NUM_PAGES = 3;
     private ViewPager mPager;
     private LinearLayout mIndicatorLayout;
@@ -125,12 +127,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                Log.d(TAG, "onPageScrolled; position = " + position + "; positionOffset = " + positionOffset + "; positionOffsetPixels = " + positionOffsetPixels);
                 // Scrollling left or right
                 if ((positionOffset > mPreviousPositionOffset && position == mPreviousPosition) || (positionOffset < mPreviousPositionOffset && position > mPreviousPosition)) {
                     mViewPagerScrollingLeft = true;
                 } else if (positionOffset < mPreviousPositionOffset) {
-
                     mViewPagerScrollingLeft = false;
                 }
                 mPreviousPositionOffset = positionOffset;
@@ -149,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+
+                Log.d(TAG, "onPageSelected , position = " + position);
 
                 if (position == 1) {
                     mSelectedPosition = 1;
@@ -178,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
 
+                Log.d(TAG, "onPageScrollStateChanged, state = " + state);
                 if (state == ViewPager.SCROLL_STATE_DRAGGING) {
                     mShouldSpheresRotate = false;
                 } else if (state == ViewPager.SCROLL_STATE_IDLE) {
@@ -224,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
 
+            Log.d(TAG, "Screen..FragmentStatePagerAdapter, getItem, position = " + position);
             ScreenSlideFragment fragment = new ScreenSlideFragment();
             Bundle args = new Bundle();
             args.putInt("position", position);
@@ -267,7 +272,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void transformPage(View page, float position) {
-
+            // 用来处理移动时候，上面的图标的另外一种动法的动画。  position 表示
+            Log.d(TAG, "CustomTransformer, position = " + position);
             int pageWidth = page.getWidth();
             if ((mViewPagerScrollingLeft && page.findViewById(R.id.center_box) != null)) {
                 animateSecondScreen(position, pageWidth, 0);
@@ -343,8 +349,10 @@ public class MainActivity extends AppCompatActivity {
     private void animateSecondScreen(float position, int pageWidth, int direction) {
 
         if (direction == 0) {
+            // 顺时针
             mAnimationView.animateSecondScreenClock(position);
         } else {
+            // 逆时针
             mAnimationView.animateSecondScreenAntiClock(position);
         }
     }
@@ -361,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
             int position = args.getInt("position");
             int layoutId = getLayoutId(position);
 
-
+            Log.d(TAG, "ScreenSlideFragment, start to onCreateView, position = " + position);
             ViewGroup rootView = (ViewGroup) inflater.inflate(layoutId, container, false);
             if (position == 0) {
 
@@ -446,6 +454,7 @@ public class MainActivity extends AppCompatActivity {
         mOriginalXValuesMap.put(mWordPressImage, mWordPressImage.getX());
 
         if (savedInstanceState == null) {
+            Log.d(TAG, "WTF, null, setPageTransformer...");
             mPager.setPageTransformer(true, new CustomTransformer());
         }
 
@@ -508,8 +517,6 @@ public class MainActivity extends AppCompatActivity {
         //final ImageView centerBox=(ImageView)rootView.findViewById(R.id.center_box_second);
         mBookView = (BookView) rootView.findViewById(R.id.center_box_second);
         mAnimationView = (SunMoonView) rootView.findViewById(R.id.animation_view);
-
-
     }
 
     private void initThirdScreenViews(View rootView, Bundle savedInstanceState) {
